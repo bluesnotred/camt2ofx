@@ -1,0 +1,19 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    builder (3.2.3)
+    camt_parser (2.6.1)
+      nokogiri
+    mini_portile2 (2.4.0)
+    nokogiri (1.10.3)
+      mini_portile2 (~> 2.4.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  builder (~> 3.2, >= 3.2.3)
+  camt_parser
+
+BUNDLED WITH
+   1.17.3
