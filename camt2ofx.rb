@@ -72,11 +72,9 @@ b.OFX {
                   b.ACCTID entry.transactions[0].iban if entry.transactions[0] 
                   b.ACCTTYPE ""
                 }
-                if entry.batch_detail
-                  b.MEMO "Batch payment id: #{entry.batch_detail.payment_information_identification} Transactions: #{entry.batch_detail.number_of_transactions}" 
-                else  
-                  b.MEMO entry.transactions[0].remittance_information
-                end
+                # MEMO
+                batch_detail = "Batch payment id: #{entry.batch_detail.payment_information_identification} Transactions: #{entry.batch_detail.number_of_transactions}" if entry.batch_detail
+                b.MEMO [batch_detail, entry.transactions[0].remittance_information, entry.transactions[0].end_to_end_reference].compact.join(", ")
               }
             end
           end
