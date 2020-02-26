@@ -74,7 +74,9 @@ b.OFX {
                 }
                 # MEMO
                 batch_detail = "Batch payment id: #{entry.batch_detail.payment_information_identification} Transactions: #{entry.batch_detail.number_of_transactions}" if entry.batch_detail
-                b.MEMO [batch_detail, entry.transactions[0].remittance_information, entry.transactions[0].end_to_end_reference].compact.join(", ")
+                remittance_information = entry.transactions[0] ? entry.transactions[0].remittance_information : ""
+                end_to_end_reference = entry.transactions[0] ? entry.transactions[0].end_to_end_reference : ""
+                b.MEMO [batch_detail, remittance_information, end_to_end_reference].compact.delete_if(&:empty?).join(", ")
               }
             end
           end
