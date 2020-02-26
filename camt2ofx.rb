@@ -12,8 +12,8 @@ exit if camt.statements.count==0
 
 @accountnr = camt.statements.first.account.iban
 @bankname =  "YOUR BANK" 
-@startdate =  camt.statements.first.from_date_time  
-@enddate = camt.statements.first.to_date_time 
+@startdate =  camt.statements.first.from_date_time || camt.statements.first.entries.first.booking_date 
+@enddate = camt.statements.last.to_date_time || camt.statements.last.entries.last.booking_date
 
 puts "Start: #{@startdate}"
 puts "End: #{@enddate}"
