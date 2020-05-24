@@ -1,6 +1,6 @@
 # camt2ofx (compatible with Xero)
 
-Convert camt.053 (XML) files to OFX.
+Convert CAMT.052 or CAMT.053 (XML) files to OFX.
 
 We use this script to **reliably import** our ING bank transactions into Xero.
 
