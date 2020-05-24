@@ -7,18 +7,30 @@ require 'builder'
 
 file_name = ARGV[0]
 exit if file_name.nil? || !File.file?(file_name)
+
 camt = CamtParser::File.parse file_name
-exit if camt.statements.count==0
+case camt.class.to_s 
+  when "CamtParser::Format052::Base"
+    statements = camt.reports
+    startdate =  statements.first.entries.first.booking_date 
+    enddate = statements.last.entries.last.booking_date    
+  when "CamtParser::Format053::Base"
+    statements = camt.statements
+    startdate =  statements.first.from_date_time || statements.first.entries.first.booking_date 
+    enddate = statements.last.to_date_time || statements.last.entries.last.booking_date  
+  else
+    puts "Unsupported file format"
+    exit
+end      
 
-@accountnr = camt.statements.first.account.iban
-@bankname =  "YOUR BANK" 
-@startdate =  camt.statements.first.from_date_time || camt.statements.first.entries.first.booking_date 
-@enddate = camt.statements.last.to_date_time || camt.statements.last.entries.last.booking_date
+exit if statements.count==0
 
-puts "Start: #{@startdate}"
-puts "End: #{@enddate}"
-puts "Account: #{@accountnr}"
-puts "Bankname: #{@bankname}"
+accountnr = statements.first.account.iban
+bankname =  "bankname" 
+
+puts "Start: #{startdate}"
+puts "End: #{enddate}"
+puts "Account: #{accountnr}"
 
 buffer = ""
 b = Builder::XmlMarkup.new(:target=>buffer, :indent=>2)
@@ -35,8 +47,8 @@ b.OFX {
       b.DTSERVER Date.today.strftime('%Y%m%d')
       b.LANGUAGE "ENG"
       b.FI {
-        b.ORG @bankname
-        b.FID @accountnr
+        b.ORG bankname
+        b.FID accountnr
       }
     }
   }
@@ -52,14 +64,14 @@ b.OFX {
         b.CURDEF "EUR"
         b.BANKACCTFROM {
           b.BANKID 123456789
-          b.ACCTID @accountnr
+          b.ACCTID accountnr
           b.ACCTTYPE "CHECKING"
         }
         b.BANKTRANLIST {
-          b.DTSTART @startdate.strftime('%Y%m%d')
-          b.DTEND @enddate.strftime('%Y%m%d')
+          b.DTSTART startdate.strftime('%Y%m%d')
+          b.DTEND enddate.strftime('%Y%m%d')
 
-          camt.statements.each do |statement|
+          statements.each do |statement|
             statement.entries.each do |entry|
               b.STMTTRN {
                 b.TINTYPE
