@@ -4,9 +4,11 @@ GEM
     builder (3.2.3)
     camt_parser (2.7.0)
       nokogiri
-    mini_portile2 (2.4.0)
-    nokogiri (1.10.8)
-      mini_portile2 (~> 2.4.0)
+    mini_portile2 (2.5.1)
+    nokogiri (1.11.5)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
+    racc (1.5.2)
 
 PLATFORMS
   ruby
